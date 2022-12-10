@@ -15,3 +15,11 @@ class Student(models.Model):
         primary_key=True,
         related_name="student",
     )
+
+class Instructor(models.Model):
+    user = models.OneToOneField(
+        "students.User",
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name="instructor",
+    )

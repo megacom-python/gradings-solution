@@ -53,3 +53,23 @@ class SubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submission
         fields = "__all__"
+
+class ReadOnlySubmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Submission
+        fields = "__all__"
+        depth = 1
+
+class UpdateSubmissionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Submission
+        fields = ("grade",)
+
+    def update(self, instance: Submission, validated_data):
+        grade = validated_data.get("grade")
+        if grade > instance.assignment.points:
+            raise ValidationError(detail={
+                "details": "Grade must not be greater than maximum points."
+            })
+        return super().update(instance, validated_data)

@@ -1,11 +1,13 @@
 from rest_framework import serializers
-from students.models import User, Student
+from students.models import User, Student, Instructor
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.authtoken.models import Token
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
+    is_student = serializers.BooleanField(write_only=True)
+
     class Meta:
         model = User
         fields = "__all__"
@@ -15,8 +17,10 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        is_student = validated_data.pop("is_student")
         user = super().create(validated_data)
-        Student.objects.create(user=user)
+        role_cls = Student if is_student else Instructor
+        role_cls.objects.create(user=user)
         return user
 
 
