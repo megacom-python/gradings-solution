@@ -39,9 +39,11 @@ class ObtainTokenSerializer(serializers.Serializer):
     def create(self, validated_data):
         instance = User.objects.get(email=validated_data.get("email"))
         if not check_password(
-            validated_data.get("password"), instance.password
+                validated_data.get("password"), instance.password
         ):
             raise AuthenticationFailed()
         assert isinstance(instance, User)
         token, _ = Token.objects.get_or_create(user=instance)
         return {"token": token.key}
+
+

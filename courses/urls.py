@@ -14,7 +14,11 @@ urlpatterns = [
     ),
     path("courses/", views.CourseAPIView.as_view()),
     path(
-        "courses/<int:course_id>/add-student/<str:title>/",
+        "courses/<int:course_id>/add-student/",
         views.RegisterStudentToCourseAPIView.as_view(),
     ),
+    path(
+        "gpa/", views.GradeInfoAPIView.as_view()
+    ),
+    path("courses/avg/<int:student_id>/", views.AvgPerCoursesAPIView.as_view())
 ]

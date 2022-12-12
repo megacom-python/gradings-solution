@@ -6,6 +6,11 @@ class Course(models.Model):
     hours = models.PositiveSmallIntegerField(default=6)
     students = models.ManyToManyField("students.Student")
 
+    class Meta:
+        indexes =
+        unique_together = (
+            "title", "hours"
+        )
 
 class Assignment(models.Model):
     course = models.ForeignKey("courses.Course", on_delete=models.CASCADE)
@@ -14,10 +19,11 @@ class Assignment(models.Model):
     points = models.PositiveIntegerField(null=True)
 
 
+
 class Submission(models.Model):
     assignment = models.ForeignKey(
         "courses.Assignment", on_delete=models.CASCADE
     )
-    student = models.ForeignKey("students.Student", on_delete=models.CASCADE)
+    student = models.ForeignKey("students.Student", on_delete=models.CASCADE, related_name="submissions")
     content = models.TextField()
     grade = models.PositiveIntegerField(null=True)

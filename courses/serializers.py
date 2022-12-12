@@ -73,3 +73,7 @@ class UpdateSubmissionSerializer(serializers.ModelSerializer):
                 "details": "Grade must not be greater than maximum points."
             })
         return super().update(instance, validated_data)
+
+
+class GPASerializer(serializers.Serializer):
+    avg = serializers.FloatField()
