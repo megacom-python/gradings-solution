@@ -5,6 +5,7 @@ urlpatterns = [
     path(
         "register-user/",
         views.RegisterUserAPIView.as_view(),
+        name="register_user"
     ),
     path(
         "obtain-token/",

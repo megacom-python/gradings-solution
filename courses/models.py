@@ -7,7 +7,6 @@ class Course(models.Model):
     students = models.ManyToManyField("students.Student")
 
     class Meta:
-        indexes =
         unique_together = (
             "title", "hours"
         )

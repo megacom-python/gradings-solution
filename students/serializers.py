@@ -7,7 +7,6 @@ from rest_framework.authtoken.models import Token
 
 class RegisterUserSerializer(serializers.ModelSerializer):
     is_student = serializers.BooleanField(write_only=True)
-
     class Meta:
         model = User
         fields = "__all__"
