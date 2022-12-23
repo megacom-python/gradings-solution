@@ -4,6 +4,8 @@ from rest_framework import status
 import pytest
 from .models import User
 from django.contrib.auth.hashers import check_password
+from .factories import UserFactory
+from rest_framework.authtoken.models import Token
 
 pytestmark = pytest.mark.django_db
 
@@ -48,3 +50,19 @@ def test_register_user__invalid_email(api_client: APIClient):
     response = api_client.post(url, data, format="json")
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json() == {'email': ['Enter a valid email address.']}
+
+
+def test_obtain_token_for_user(api_client: APIClient):
+    user = UserFactory()
+    user.set_password("123!@#")
+    user.save()
+    assert User.objects.count() > 0
+    url = reverse("obtain_token")
+    data = {
+        "email": user.email,
+        "password": "123!@#"
+    }
+    response = api_client.post(url, data, format="json")
+    assert response.status_code == status.HTTP_201_CREATED
+    token = response.data.get("token")
+    assert Token.objects.filter(key=token).exists()

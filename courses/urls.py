@@ -10,9 +10,10 @@ urlpatterns = [
     ),
     path(
         "submissions/<int:pk>/",
-        views.SubmissionUpdateAPIView.as_view()
+        views.SubmissionUpdateAPIView.as_view(),
+        name="grade_submission",
     ),
-    path("courses/", views.CourseAPIView.as_view()),
+    path("courses/", views.CourseAPIView.as_view(), name="courses_list"),
     path(
         "courses/<int:course_id>/add-student/",
         views.RegisterStudentToCourseAPIView.as_view(),

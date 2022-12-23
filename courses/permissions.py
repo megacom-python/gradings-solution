@@ -28,6 +28,6 @@ class IsInstructorPermission(IsAuthenticated):
         # Student.objects.filter(user_id=request.user.id).exists()
         try:
             instructor = request.user.instructor
-        except User.instructor.RelatedObjectDoesNotExist:
+        except (User.instructor.RelatedObjectDoesNotExist, AttributeError):
             return False
         return instructor and is_authenticated

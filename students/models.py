@@ -8,6 +8,7 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = "email"
 
 
+
 class Student(models.Model):
     user = models.OneToOneField(
         "students.User",

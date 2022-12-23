@@ -10,5 +10,6 @@ urlpatterns = [
     path(
         "obtain-token/",
         views.ObtainTokenAPIView.as_view(),
+        name="obtain_token"
     ),
 ]
