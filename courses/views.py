@@ -13,7 +13,8 @@ from rest_framework.permissions import SAFE_METHODS
 from rest_framework.response import Response
 from rest_framework import status
 from courses.permissions import IsStudentPermission, IsStudentOrReadOnly, IsInstructorPermission
-
+from .services.grades import GradeService
+from typing import Any
 
 class CourseAPIView(generics.ListCreateAPIView):
     queryset = Course.objects.all()
@@ -80,32 +81,28 @@ class SubmissionUpdateAPIView(generics.UpdateAPIView):
     permission_classes = (IsInstructorPermission,)
 
 
-class GradeInfoAPIView(generics.ListAPIView):
-    permission_classes = (IsStudentPermission,)
-    serializer_class = GPASerializer
-    """
-    HTTP GET /students/gpa/
+class ServiceMixin:
+    service_class: Any
 
-    {
-        "avg": 4.00
-    }
-    """
+    def get_service(self, *args, **kwargs):
+        assert self.service_class is not None, (
+            f"{self.__class__.__name__} must include `service_class`"
+        )
+        return self.service_class(*args, **kwargs)
+
+class ServiceGetMixin(ServiceMixin):
 
     def get(self, request, *args, **kwargs):
-        # assignment.points = 10
-        # submission.grade = 8
-
-        # 10 - 100%
-        # 8 - ?
-
-        data = request.user.student.submissions.annotate(
-            percent=F("grade") * 100 / F("assignment__points")
-        ).aggregate(
-            avg=Avg("percent")
-        )
+        service = self.get_service()
+        data = service.execute(user=request.user)
         serializer = self.get_serializer(data, many=False)
         return Response(serializer.data)
-        # request.user.student.submissions.
+
+
+class GradeInfoAPIView(ServiceGetMixin, generics.ListAPIView):
+    permission_classes = (IsStudentPermission,)
+    serializer_class = GPASerializer
+    service_class = GradeService
 
 
 class AvgPerCoursesAPIView(generics.ListAPIView):

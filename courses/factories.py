@@ -27,3 +27,4 @@ class SubmissionFactory(factory.django.DjangoModelFactory):
     assignment = factory.SubFactory(AssignmentFactory)
     content = factory.Faker("paragraph")
     student = factory.SubFactory(StudentFactory)
+    grade = factory.Faker("pyint", min_value=10, max_value=100)

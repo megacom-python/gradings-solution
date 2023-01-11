@@ -19,7 +19,7 @@ urlpatterns = [
         views.RegisterStudentToCourseAPIView.as_view(),
     ),
     path(
-        "gpa/", views.GradeInfoAPIView.as_view()
+        "gpa/", views.GradeInfoAPIView.as_view(), name="gpa"
     ),
     path("courses/avg/<int:student_id>/", views.AvgPerCoursesAPIView.as_view())
 ]
