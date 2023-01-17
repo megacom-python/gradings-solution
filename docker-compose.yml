@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  gradings-api:
+    build: .
+    command: "bash start.sh"
+    container_name: "gradings"
+    ports:
+      - 8000:8000
+    depends_on:
+      - gradings-db
+
+  gradings-db:
+    image: postgres:14-alpine
+    container_name: "gradings-db"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ".db.env"
+
+volumes:
+  postgres_data:
